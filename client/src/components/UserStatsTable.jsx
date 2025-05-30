@@ -4,28 +4,10 @@ import UserStatsRow from "./UserStatsRow";
 import { AuthContext } from "../context/AuthProvider";
 
 const UserStatsTable = () => {
-  // const [stats, setStats] = useState(null);
-  // const [username, setUsername] = useState("");
   const [stats, setStats] = useState([]);
   const { username } = useContext(AuthContext);
-  // if (stats) {
-  //   const favoriteGame = stats.reduce((max, game) =>
-  //     game.play_count > max.play_count ? game : max
-  //   );
-  //   console.log("Your favorite game: ", favoriteGame);
-  // }
 
   useEffect(() => {
-    // Fetch user info (username from JWT)
-    // axios
-    //   .get("http://localhost:5150/api/auth/me", { withCredentials: true })
-    //   .then((res) => {
-    //     setUsername(res.data.user.username);
-    //   })
-    //   .catch((err) => {
-    //     console.error("Failed to fetch username:", err);
-    //   });
-
     // Fetch user stats
     axios
       .get("http://localhost:5150/api/user/table-stats", {
@@ -44,8 +26,6 @@ const UserStatsTable = () => {
     <div>
       <div className="user-stats-container">
         <h1>{username ? `${username}'s Stats` : "Loading..."}</h1>
-
-        {/* Example static data — replace with real stats when ready */}
         <div className="user-stats">
           <div className="user-stats-info-style">
             <h2>

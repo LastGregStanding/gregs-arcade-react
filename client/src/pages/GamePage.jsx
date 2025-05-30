@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../context/AuthProvider";
 
 const GamePage = () => {
   const { gameName } = useParams();
   const [stats, setStats] = useState({});
   const [score, setScore] = useState(null);
+  const { username } = useContext(AuthContext);
 
   useEffect(() => {
     // Fetch user highscore for the specific game
@@ -51,8 +53,9 @@ const GamePage = () => {
 
   return (
     <div>
-      <h3>
-        Your HighScore: {stats.high_score === null ? "N/A" : stats.high_score}
+      <h3 className="game-highscore">
+        {username}'s Current High Score:{" "}
+        {stats.high_score === null ? "N/A" : stats.high_score}
       </h3>
       <iframe
         src={`/games/${gameName}/index.html`}
