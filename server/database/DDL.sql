@@ -75,25 +75,83 @@ CREATE TABLE game_data (
 );
 
 -- -----------------------------------------------------
--- Stored Procedure: GetUserStats
+-- Stored Procedure: GetUserTableStats
 -- -----------------------------------------------------
 
-DROP PROCEDURE IF EXISTS GetUserStats;
+DROP PROCEDURE IF EXISTS GetUserTableStats;
 DELIMITER //
 
-CREATE PROCEDURE GetUserStats (IN p_user_id INT)
+CREATE PROCEDURE GetUserTableStats (IN p_user_id INT)
 BEGIN
     SELECT
-        game_name,
+        gd.game_name,
+        gd.play_count,
+        gd.high_score,
+        gd.high_score_date,
+        u.created_at AS account_created_at
+    FROM game_data gd
+    JOIN users u ON gd.user_id = u.id
+    WHERE gd.user_id = p_user_id
+    ORDER BY gd.game_name ASC;
+END //
+
+DELIMITER ;
+
+
+-- -----------------------------------------------------
+-- Stored Procedure: GetUserGameStats
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS GetUserGameStats;
+
+DELIMITER //
+
+CREATE PROCEDURE GetUserGameStats (
+    IN p_user_id INT,
+    IN p_game_name VARCHAR(50)
+)
+BEGIN
+    SELECT
         play_count,
         high_score,
         high_score_date
     FROM game_data
     WHERE user_id = p_user_id
-    ORDER BY game_name ASC;
+      AND game_name = p_game_name;
 END //
 
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- Stored Procedure: UpdateHighScore
+-- -----------------------------------------------------
+
+DROP PROCEDURE IF EXISTS UpdateHighScore;
+DELIMITER //
+
+CREATE PROCEDURE UpdateHighScore(
+  IN p_user_id INT,
+  IN p_game_name VARCHAR(50),
+  IN p_new_score INT,
+  IN p_play_count INT
+)
+BEGIN
+  UPDATE game_data
+  SET
+    play_count = p_play_count,
+    high_score = CASE
+      WHEN p_new_score > IFNULL(high_score, 0) THEN p_new_score
+      ELSE high_score
+    END,
+    high_score_date = CASE
+      WHEN p_new_score > IFNULL(high_score, 0) THEN CURDATE()
+      ELSE high_score_date
+    END
+  WHERE user_id = p_user_id AND game_name = p_game_name;
+END //
+
+DELIMITER ;
+
 
 -- -----------------------------------------------------
 -- Stored Procedure: GetLeaderboardStats

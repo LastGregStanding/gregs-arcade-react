@@ -1,9 +1,10 @@
+import { useEffect, useContext } from "react";
 import { Outlet } from "react-router-dom";
+import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useEffect, useContext } from "react";
-import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+
+import { AuthContext } from "../context/AuthProvider";
 
 const MainLayout = () => {
   const { setLoggedIn } = useContext(AuthContext);
@@ -23,7 +24,6 @@ const MainLayout = () => {
 
   return (
     <div className="primary-site-container">
-      {/* <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} /> */}
       <Navbar />
       <Outlet />
       <Footer />

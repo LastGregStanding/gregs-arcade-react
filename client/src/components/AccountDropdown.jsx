@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthProvider";
 
 function AccountDropdown() {
   const navigate = useNavigate();
